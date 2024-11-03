@@ -1,0 +1,112 @@
+<%- include("../partials/header.ejs") %>
+<!--==========================
+    INSIDE HERO SECTION Section
+============================-->
+<section class="page-image page-image-contact md-padding">
+  <h1 class="text-white text-center">LOGIN</h1>
+</section>
+
+<!--==========================
+    Contact Section
+============================-->
+<section id="contact" class="md-padding">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-4 offset-md-4">
+        <div class="section-header">
+          <h2 class="title">Login</h2>
+          
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <form
+          id="contactForm"
+          action="/login"
+          method="post"
+          novalidate="novalidate"
+        >
+          <div class="row">
+            <div class="col-lg-6 col-md-12 offset-lg-3 offset-md-1">
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Your Email *"
+                  required="required"
+                  data-validation-required-message="Please enter your email address."
+                />
+                <p class="help-block text-danger"></p>
+              </div>
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  id="phone"
+                  type="password"
+                  name="password"
+                  placeholder="Your Password *"
+                  required="required"
+                  data-validation-required-message="Please enter your Password."
+                />
+                <p class="help-block text-danger"></p>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-lg-12 text-center">
+              <div id="success"></div>
+              <button id="sendMessageButton" class="main-btn" type="submit">
+                Login
+              </button>
+              <h4 class="text-light">
+                Don't have an account <br>
+                <a class="title" href="/register">Register</a>
+              </h4>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="footer-follow">
+          <li>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fab fa-google-plus-g"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </li>
+        </ul>
+        <div class="footer-copyrights">
+          <p>NO COPYRIGHT ARIN YAZILIM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<%- include("../partials/footer.ejs") %>

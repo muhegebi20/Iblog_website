@@ -1,0 +1,75 @@
+<%- include("../partials/header.ejs") %> <%- include("../partials/navbar.ejs")
+%>
+
+<section class="page-image page-image-contact md-padding">
+  <h1 class="text-white text-center">Update Blog</h1>
+</section>
+
+<!--==========================
+    Contact Section
+============================-->
+<section id="contact" class="md-padding">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-4 offset-md-4">
+        <div class="section-header">
+          <h2 class="title">Update Blog</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <form
+          id="contactForm"
+          action="/blog/<%-post.id%>?_method=PATCH"
+          method="post"
+          novalidate="novalidate"
+        >
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  id="name"
+                  name="title"
+                  type="text"
+                  placeholder="Enter blog title *"
+                  required="required"
+                  value="<%= post.title %>"
+                  data-validation-required-message="Please enter blog title."
+                />
+                <p class="help-block text-danger"></p>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <textarea
+                  class="form-control"
+                  id="message"
+                  name="content"
+                  placeholder="Content *"
+                  required="required"
+                  data-validation-required-message="Please enter the content."
+                >
+<%= post.content %>
+            </textarea
+                >
+                <p class="help-block text-danger"></p>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-lg-12 text-center">
+              <div id="success"></div>
+              <button id="sendMessageButton" class="main-btn" type="submit">
+                Update
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include("../partials/footer.ejs") %>
