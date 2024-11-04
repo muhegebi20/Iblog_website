@@ -10,10 +10,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
+    "express-session": "^1.18.1",
     "method-override": "^3.0.0",
-    "mongoose": "^8.7.3"
+    "mongoose": "^8.7.3",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
   }
 }

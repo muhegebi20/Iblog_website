@@ -6,6 +6,10 @@ let Post = require("./model/blog_Schema.js");
 const mongoose = require("mongoose");
 let methodOverride = require("method-override");
 const User = require("./model/user.js");
+const bcrypt = require("bcrypt");
+const passport = require("passport");
+const localStrategy = require("./utils/localStrategy.js");
+const session = require("express-session");
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "img")));
@@ -19,6 +23,21 @@ main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/Iblog");
 }
+
+app.use(
+  session({
+    secret: "hairy cat",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 3600 * 24,
+      secure: true,
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 //main app
 app.get("/", (req, res) => {
@@ -39,7 +58,6 @@ app.get("/blog/:id", async (req, res) => {
 });
 app.patch("/blog/:id", async (req, res) => {
   let { id } = req.params;
-  // console.log(req.body);
   let post = await Post.findByIdAndUpdate(id, req.body);
   console.log(post);
   res.redirect(`/blog/${id}`);
@@ -71,29 +89,27 @@ app.post("/newpost", async (req, res) => {
 app.get("/login", (req, res) => {
   res.render("main/login");
 });
-app.post("/login", async (req, res) => {
-  let {
-    body: { password, email },
-  } = req;
-  let user = await User.findOne({ email: email });
-  console.log(user.password);
-  console.log(`u p: ${password}`);
-  // console.log(`db p: ${user.password}`);
-  if (user) {
-    if (user.password != password) {
-      return res.send("incorrect email or password");
-    }
-    res.redirect("/blog");
-  }
-});
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+  })
+);
 app.get("/register", (req, res) => {
   res.render("main/register");
 });
-app.post("/register", async (req, res) => {
+app.post("/register", async (req, res, next) => {
   let { body } = req;
   let newUser = new User(body);
+  newUser.password = bcrypt.hashSync(newUser.password, 10);
   await newUser.save();
-  res.redirect("/login");
+  req.login(newUser, function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
 });
 app.listen(3000, () => {
   console.log("listening to the server...");
