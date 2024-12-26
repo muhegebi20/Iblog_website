@@ -45,12 +45,14 @@
 
 						</div>
 						<!-- /blog comments -->
+						 <% if(currentUser){ %>
 						<div class="row">
 							<a href="/blog/<%= post.id %>/edit" class="btn btn-warning mx-3">Edit</a>
 							<form action="/blog/<%= post.id %>?_method=delete" method="post">
 								<button class="btn btn-danger">Delete</button>
 							</form>
 						 </div>
+						 <% } %>
 					</div>
 				</main>
 				<!-- /Main -->

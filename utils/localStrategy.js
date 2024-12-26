@@ -8,9 +8,12 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-  User.findById(id, function (err, user) {
-    done(err, user);
-  });
+  try {
+    let user = User.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
 });
 
 passport.use(
