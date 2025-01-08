@@ -187,14 +187,18 @@
       <aside id="aside" class="col-md-4">
         <div class="widget">
           <div class="widget-search">
-            <input
-              class="search-input form-control"
-              type="text"
-              placeholder="Search"
-            />
-            <button class="search-btn" type="button">
-              <i class="fas fa-search"></i>
-            </button>
+            <form action="/search" method="get">
+              <input
+                class="search-input form-control"
+                type="text"
+                placeholder="Search"
+                name="query"
+                id="query"
+              />
+              <button type="submit" class="search-btn" type="button">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
           </div>
         </div>
         <!-- /Search -->

@@ -10,6 +10,7 @@
 	<!--==========================
     Contact Section
 ============================-->
+<%- include("../messages.ejs") %>
 	<section id="blog" class="md-padding">
 		<div class="container">
 			<div class="row">
@@ -45,7 +46,7 @@
 
 						</div>
 						<!-- /blog comments -->
-						 <% if(currentUser){ %>
+						 <% if(currentUser && post.author.equals(currentUser._id)){ %>
 						<div class="row">
 							<a href="/blog/<%= post.id %>/edit" class="btn btn-warning mx-3">Edit</a>
 							<form action="/blog/<%= post.id %>?_method=delete" method="post">

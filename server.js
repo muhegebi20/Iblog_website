@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 let express = require("express");
 let path = require("path");
 let app = express();
@@ -11,8 +15,9 @@ const passport = require("passport");
 const localStrategy = require("./utils/localStrategy.js");
 const session = require("express-session");
 const ExpressError = require("./utils/ExpressError.js");
-const { IsLoggedIn } = require("./middleware.js");
+const { IsLoggedIn, IsAuthor } = require("./middleware.js");
 const flash = require("connect-flash");
+const MongoStore = require("connect-mongo");
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "img")));
@@ -31,11 +36,14 @@ async function main() {
 app.use(
   session({
     secret: "hairy cat",
+    store: MongoStore.create({
+      mongoUrl: "mongodb://127.0.0.1:27017/Iblog",
+      dbName: "Iblog",
+    }),
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 3600 * 24,
-      secure: true,
     },
   })
 );
@@ -44,8 +52,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use((req, res, next) => {
-  console.dir(req);
-  app.locals.currentUser = req.user;
+  res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
@@ -58,64 +65,70 @@ app.get("/", (req, res) => {
 app.get("/about", (req, res) => {
   res.render("main/about");
 });
-app.get("/blog/:id/edit", IsLoggedIn, async (req, res) => {
+app.get("/blog/:id/edit", IsLoggedIn, async (req, res, next) => {
   try {
     let { id } = req.params;
     let post = await Post.findById(id);
     res.render("main/updatePost", { post });
   } catch (error) {
-    new ExpressError(500, "something went wrong");
+    next(new ExpressError(500, "something went wrong"));
   }
 });
-app.get("/blog/:id", async (req, res) => {
+app.get("/blog/:id", async (req, res, next) => {
   try {
     let { id } = req.params;
     let post = await Post.findById(id);
     res.render("main/details", { post });
   } catch (error) {
-    new ExpressError(404, "something went wrong");
+    next(new ExpressError(404, "something went wrong"));
   }
 });
-app.patch("/blog/:id", IsLoggedIn, async (req, res) => {
+app.patch("/blog/:id", IsLoggedIn, async (req, res, next) => {
   try {
     let { id } = req.params;
     let post = await Post.findByIdAndUpdate(id, req.body);
-    console.log(post);
+    req.flash("success", "successfully updated!");
     res.redirect(`/blog/${id}`);
   } catch (error) {
-    new ExpressError(500, "Try again!");
+    req.flash("error", "failed to update post");
+    next(new ExpressError(500, "Try again!"));
   }
 });
-app.delete("/blog/:id", IsLoggedIn, async (req, res) => {
-  let { id } = req.params;
-  await Post.findByIdAndDelete(id);
-  res.redirect("/blog");
+app.delete("/blog/:id", IsLoggedIn, IsAuthor, async (req, res, next) => {
+  try {
+    let { id } = req.params;
+    await Post.findByIdAndDelete(id);
+    res.redirect("/blog");
+  } catch (error) {
+    next(new ExpressError(403, "you can't delete this post"));
+  }
 });
-app.get("/blog", async (req, res) => {
+app.get("/blog", async (req, res, next) => {
   try {
     let content = await Post.find({});
     res.render("main/blog", { content });
   } catch (error) {
-    new ExpressError(404, "Page not found");
+    next(new ExpressError(404, "Page not found"));
   }
 });
 app.get("/contact", (req, res) => {
   res.render("main/contact");
 });
-app.get("/newblog", (req, res) => {
+app.get("/newblog", IsLoggedIn, (req, res) => {
   res.render("main/newblog");
 });
 
-app.post("/newpost", IsLoggedIn, async (req, res) => {
+app.post("/newpost", IsLoggedIn, async (req, res, next) => {
   try {
     let content = req.body;
     let today = new Date().toGMTString();
     content.date = today.substring(5, 16);
     let newpost = new Post(content);
+    newpost.author = req.user._id;
     let saved = await newpost.save();
     res.redirect(`/blog/${saved.id}`);
   } catch (error) {
-    new ExpressError("couldn't post, please try again!");
+    next(new ExpressError(500, "couldn't post, please try again!"));
   }
 });
 app.get("/login", (req, res) => {
@@ -126,8 +139,11 @@ app.post(
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
+    failureFlash: true,
+    failureMessage: "please try again!",
   })
 );
+
 app.get("/register", (req, res) => {
   res.render("main/register");
 });
@@ -156,17 +172,37 @@ app.get("/logout", IsLoggedIn, function (req, res, next) {
     res.redirect("/");
   });
 });
+app.get("/profile", (req, res) => {
+  res.render("user/profile");
+});
+app.get("/search", async (req, res, next) => {
+  try {
+    const searchTerm = req.query;
+    searchTerm.trim();
+    console.log(searchTerm);
+    query.or([{ color: "red" }, { status: "emergency" }]);
+    const results = await Post.find({
+      $or: [
+        {
+          title: { $regex: searchTerm, $options: "i" },
+        },
+        { content: { $regex: searchTerm, $options: "i" } },
+      ],
+    }); // MongoDB case-insensitive regex search
+    res.send(results);
+  } catch (error) {
+    return next(new ExpressError(404, "no data found!"));
+  }
+});
 
 app.use("*", (req, res, next) => {
-  next(new ExpressError("Page Not Found"));
+  next(new ExpressError(404, "Page Not Found"));
 });
 
 app.use((err, req, res, next) => {
-  console.log("called!!!!!!!!!!!1");
   let { statusCode = 500 } = err;
   if (!err.message) err.message = "Oh, something went wrong!";
   res.status(statusCode).render("errors.ejs", { error: err });
-  next();
 });
 
 app.listen(3000, () => {

@@ -1,0 +1,75 @@
+<%- include("../partials/header.ejs") %>
+<!--==========================
+    INSIDE HERO SECTION Section
+============================-->
+<section class="page-image page-image-contact md-padding">
+  <h1 class="text-white text-center">DASHBOARD</h1>
+</section>
+
+<!--==========================
+    Contact Section
+============================-->
+<div class="container my-3 row">
+  <div class="current_user col-sm-12 col-lg-4 my-3">
+    <div class="user_photo col-2">
+      <% if(!currentUser.image) {%>
+      <i class="fa-solid fa-user profile_icon"></i>
+      <% } else{%>
+      <img src="<%= currentUser.image %>" alt="" />
+      <% } %>
+    </div>
+    <h4 class="user_name col-md-8 col-lg-12">name: <%= currentUser.name %></h4>
+    <h4 class="user_email col-12">email: <%= currentUser.email %></h4>
+    <div class="col-12 border-dark rounded-pill my-2">
+      <a href="/profile/:id/edit">Edit Profile</a>
+    </div>
+    <div class="nav-item">
+      <a class="nav-link" href="/logout">Logout</a>
+    </div>
+  </div>
+  <div class="dashboard col-lg-8 col-sm-12">
+    <h3>Dashboard</h3>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, voluptate!
+      Autem ex quis quidem esse nihil tempora et iusto nostrum nemo accusamus
+      iure, atque molestias est eligendi quas, provident vel.
+    </p>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="footer-follow">
+          <li>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fab fa-google-plus-g"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </li>
+          <li>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </li>
+        </ul>
+        <div class="footer-copyrights">
+          <p>NO COPYRIGHT ARIN YAZILIM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<%- include("../partials/footer.ejs") %>

@@ -946,3 +946,38 @@ span.writer {
 .blog-content .fas {
   color: #fd8a10;
 }
+.current_user {
+  border-right: 2px solid black;
+  height: 100vh;
+}
+.profile {
+  border: 1px solid #f4f4f4;
+  border-radius: 50%;
+  padding: 8px;
+  height: auto;
+  width: 35px;
+}
+.user_photo {
+  background-image: linear-gradient(to bottom right, #667eea, #764ba2);
+  padding: 40px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.profile_icon {
+  font-size: 60px;
+  color: #fff;
+}
+
+@media screen and (max-width: 600px) {
+  .current_user {
+    border-right: none;
+    height: auto;
+    margin-left: 100px;
+  }
+  .dashboard {
+    border-top: 1px solid #1c1b1b;
+  }
+}

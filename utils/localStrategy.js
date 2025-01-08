@@ -4,15 +4,15 @@ const bcrypt = require("bcrypt");
 const User = require("../model/user");
 
 passport.serializeUser(function (user, done) {
-  done(null, user.id);
+  return done(null, user.id);
 });
 
-passport.deserializeUser(function (id, done) {
+passport.deserializeUser(async function (id, done) {
   try {
-    let user = User.findById(id);
-    done(null, user);
+    let user = await User.findById(id);
+    return done(null, user);
   } catch (error) {
-    done(error, null);
+    return done(error, null);
   }
 });
 
