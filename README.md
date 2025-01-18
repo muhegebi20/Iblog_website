@@ -81,4 +81,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Contact
 
-For any inquiries or feedback, feel free to reach out to me via [your-email@example.com].
+For any inquiries or feedback, feel free to reach out to me via <muhegebi2021@gmail.com>.
