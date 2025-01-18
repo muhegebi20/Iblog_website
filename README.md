@@ -25,7 +25,7 @@ iBlog is a personal blogging platform designed to empower users to share their t
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/<your-username>/iblog.git
+   git clone https://github.com/muhegebi20/iblog.git
    ```
 
 2. Navigate to the project directory:
